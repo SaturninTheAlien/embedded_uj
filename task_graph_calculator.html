@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Task graph calculator</title>
+    <script src="task_graph.js"></script>
+    <script src="task_graph_calculator.js"></script>
+    <script src="utils.js"></script>
+    <style>
+.fd{
+    font-weight: bold;
+}
+
+    </style>
+
+</head>
+<body>
+
+<h1>Task graph calculator</h1>
+
+<div id="s0">
+    <p class="fd">Enter the task graph:</p>
+    <form>
+        <textarea style="width: 500px; height: 300px;" id="task_graph_input"></textarea>
+        <br/>
+        <button type="button" role="open">Open from file</button>
+        <button type="reset">Clear</button>
+        <br/>
+        <button type="submit">Next</button>
+    </form>
+
+</div>
+
+<div id="s1" style="display: none;">
+    <p class="fd">Select option</p>
+    <form>
+        <select name="selected_branch">
+            <option value="0">Create your own system</option>
+            <option value="1">The fastest solution</option>
+            <option value="2">The cheapest solution</option>
+        </select>
+        <br/>
+        <br/>
+        <button type="button" role="go_back">Back</button>
+        <button type="submit">Next</button>
+    </form>
+</div>
+
+
+<div id="s2" style="display: none;">
+    <p class="fd">Enter the number of each programmable processor type.</p>
+    <form>
+        <table></table>
+
+        <button type="button" role="go_back">Back</button>
+        <button type="submit">Next</button>
+    </form>
+</div>
+
+<div id="s3" style="display: none;">
+    <p class="fd">Select processor for each task.</p>
+    
+    <p>Avalaible processors:
+        <span id="s2_avalaible_processors"></span>
+    </p>
+
+    <form>
+        <table></table>
+        <button type="button" role="go_back">Back</button>
+        <button type="submit">Next</button>
+    </form>
+    
+</div>
+
+<div id="s4" style="display: none;">
+    <p class="fd">Embedded system</p>
+
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <div role="system_description"></div>
+
+
+            <form role="modify_system_with_cost_gains">
+                <input name="cost_gain" type="number" value="50" required>
+                <button type="submit">Modify system</button>
+            </form>
+
+            <div role="gains">
+            </div>
+
+        </div>
+        <div>
+            <p>No siema</p>
+            <canvas role="gantt_chart" width=600 height=400 style="border: 1px solid black;"></canvas>
+        </div>
+    </div>
+
+    <button type="button" role="go_back">Back</button>
+</div>
+
+<script>
+    let app = new TaskGraphApp();
+
+</script>
+
+</body>
+</html>
