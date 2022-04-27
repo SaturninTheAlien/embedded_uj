@@ -524,8 +524,6 @@ function calculateTime(embedded_system, task_graph){
                 let data_transfer_time = 0;
                 if(successor.data!=0){
                     data_transfer_time = Math.ceil(successor.data / channel.data);
-                    //console.log(data_transfer_time);
-                    //console.log(end_time);
                 }
                 f2(successor_name, end_time + data_transfer_time);
             }
@@ -594,42 +592,6 @@ function calculateCost(embedded_system, task_graph){
 }
 
 
-function calculateCostGains(task_graph, embedded_system){
-
-    let results = [];
-    for(let task of task_graph.tasks){
-        let currentProc = findProcInSystemByTaskName(embedded_system, task.name);
-        if(currentProc!=null){
-            let currentProcIndex = currentProc.type_id;
-            let currentCost = task.costs_per_processor[currentProcIndex];
-
-            let tmp = [];
-            for(let i=0;i<task_graph.processors.length;++i){
-                if(i==currentProcIndex)continue;
-
-                let newCost = task.costs_per_processor[i];
-                tmp.push({
-                    "new_proc": task_graph.processors[i].name,
-                    "cost_gain": currentCost - newCost
-                })
-            }
-
-            results.push({
-                "task_name": task.name,
-                "current_proc": currentProc.name,
-                "replacements": tmp
-            });
-        }
-    }
-
-    return results;
-}
-
-function modifySystemByCostGains(task_graph, embedded_system, min_cost_gain=50){
-    let cost_gains = calculateCostGains(task_graph, embedded_system);
-
-}
-
 
 if(typeof window === 'undefined'){
     
@@ -639,7 +601,5 @@ if(typeof window === 'undefined'){
         findTheCheapestSolution,
         calculateCost,
         calculateTime,
-        calculateCostGains,
-        modifySystemByCostGains,
     }
 }

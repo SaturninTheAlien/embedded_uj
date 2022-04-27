@@ -8,6 +8,7 @@
     <script src="task_graph.js"></script>
     <script src="task_graph_calculator.js"></script>
     <script src="utils.js"></script>
+    <script src="cost_gains.js"></script>
     <style>
 .fd{
     font-weight: bold;
@@ -81,23 +82,39 @@
         <div style="flex: 1;">
             <div role="system_description"></div>
 
-
-            <form role="modify_system_with_cost_gains">
-                <input name="cost_gain" type="number" value="50" required>
-                <button type="submit">Modify system</button>
-            </form>
-
-            <div role="gains">
+            <div role="modify_system_with_cost_gains" style="display: none;">
+                <p class="fd">"Cost gains algorithm"</p>
+                <form >
+                    <input name="min_cost_gain" type="number" min="1" value="50" required>
+                    <button type="submit">Modify system</button>
+                </form>
             </div>
+        </div>
 
-        </div>
-        <div>
-            <p>No siema</p>
+        <!-- <div>
+            <p>Gantt chart</p>
             <canvas role="gantt_chart" width=600 height=400 style="border: 1px solid black;"></canvas>
-        </div>
+        </div> -->
     </div>
 
     <button type="button" role="go_back">Back</button>
+</div>
+
+<div id="s5" style="display: none;">
+    <p class="fd">Embedded system after "cost gains algorithm"</p>
+
+    <div style="display: flex;">
+
+        <div style="flex: 1;">
+            <div role="system_description"></div>
+
+        </div>
+
+        <!-- <div>
+            <p>Gantt chart</p>
+            <canvas role="gantt_chart" width=600 height=400 style="border: 1px solid black;"></canvas>
+        </div> -->
+    </div>
 </div>
 
 <script>

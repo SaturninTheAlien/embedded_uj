@@ -54,7 +54,7 @@ class TaskGraphApp{
 
         let _this = this;
         
-        this.s_divs = Array.from({length:5}, (x, i)=>
+        this.s_divs = Array.from({length:6}, (x, i)=>
         document.getElementById("s"+i.toString()) );
 
         for(let s_div of this.s_divs){
@@ -188,25 +188,21 @@ class TaskGraphApp{
             _this.goNext();
         }
 
-        this.cost_gains_form = this.s_divs[4].querySelector("form[role='modify_system_with_cost_gains']");
+        this.cost_gains_div = this.s_divs[4].querySelector("div[role='modify_system_with_cost_gains']");
 
-        let gains_div = this.s_divs[4].querySelector("div[role='gains']");
-        if(gains_div!=null){
+        let cost_gains_form = this.cost_gains_div.querySelector("form");
 
-            this.cost_gains_form.onsubmit = function(event){
-                event.preventDefault();
+        this.embedded_system2 = null;
+        
+        cost_gains_form.onsubmit = function(event){
+            event.preventDefault();
+            let fd = new FormData(cost_gains_form);
+            let min_cost_gain = fd.get("min_cost_gain");
 
-                let cost_gains = calculateCostGains(_this.task_graph, _this.embedded_system);
-                let inner_html = "";
-
-                for(let cg of cost_gains){
-                    for(let rp of cg.replacements){
-                        inner_html+=`<p>${cg.task_name}: ${cg.current_proc}→${rp.new_proc}:${rp.cost_gain}</p>`;
-                    }
-                }
-
-                gains_div.innerHTML = inner_html;
-            }
+            _this.embedded_system2 = modifySystemByCostGains(_this.task_graph, _this.embedded_system, min_cost_gain);
+            console.log(_this.embedded_system2);
+            _this.prepareS5SystemDescription();
+            _this.goNext();
         }
     }
     prepareS2Dialog(){
@@ -249,14 +245,13 @@ class TaskGraphApp{
         form_table.innerHTML = inner_html2;
     }
 
-    prepareS4SystemDescription(show_cost_gains_form=false){
-
-        let cost_results = calculateCost(this.embedded_system, this.task_graph);
-        let time_results = calculateTime(this.embedded_system, this.task_graph);
+    renderSystemDescription(system_in){
+        let cost_results = calculateCost(system_in, this.task_graph);
+        let time_results = calculateTime(system_in, this.task_graph);
 
         let inner_html = "";
 
-        for(let e of this.embedded_system){
+        for(let e of system_in){
             inner_html += `<p> ${e.processor.name}: ${e.tasks.join(",")} </p>`;
         }
         inner_html += `
@@ -272,16 +267,26 @@ class TaskGraphApp{
         for(let dr of time_results.detailed_results){
             inner_html += `<p>${dr.task_name}: ${dr.start_time} _ ${dr.end_time} # ${dr.proc_name}</p>`
         }
+        return inner_html;
+    }
+
+    prepareS4SystemDescription(show_cost_gains_form=false){
+
 
         let system_description = this.s_divs[4].querySelector("div[role='system_description']");
-        system_description.innerHTML = inner_html;
+        system_description.innerHTML = this.renderSystemDescription(this.embedded_system);
 
         if(show_cost_gains_form){
-            this.cost_gains_form.style.display=null;
+            this.cost_gains_div.style.display=null;
         }
         else{
-            this.cost_gains_form.style.display="none";
+            this.cost_gains_div.style.display="none";
         }
+    }
+
+    prepareS5SystemDescription(){
+        let system_description = this.s_divs[5].querySelector("div[role='system_description']");
+        system_description.innerHTML = this.renderSystemDescription(this.embedded_system2);
     }
 
     goNext(){
@@ -289,9 +294,14 @@ class TaskGraphApp{
         if(this.selected_branch==0){
             ++this.state;
         }
-        else if(this.selected_branch<=2){
+        else if(this.state==1 && this.selected_branch<=2){
             this.state=4;
         }
+        else if(this.state==4){
+            this.state=5;
+        }
+
+        console.log(this.state);
         
         this.s_divs[this.state].style.display=null;
     }
@@ -307,6 +317,9 @@ class TaskGraphApp{
         }
         else if(this.state==4){
             this.state=1;
+        }
+        else if(this.state==5){
+            this.state=4;
         }
 
         this.s_divs[this.state].style.display=null;
