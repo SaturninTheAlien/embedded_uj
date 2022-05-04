@@ -21,38 +21,46 @@ class SpanningTreeNode{
     }
     // bracket notation
     toString(){
-        let result = `${this.task_index}<${this.construction_option}>`
+        //let result = `${this.task_index}<${this.construction_option}>`
         //let result = this.task_name;
+
+        let result = this.task_index.toString();
         if(this.children.length>0){
             result+="(" + this.children.map(a=>a.toString()).join(",") + ")";
         }
 
         return result;
     }
+
 }
 
 
 function createSpanningTree(task_graph, choose_construction_option){
     if(task_graph.tasks.length==0)return null;
 
+    let s1 = new Set();
     
     function f1(parent_node, task){
         for(let s of task.successors){
 
             let s_id = s.id;
-            let s_task = task_graph.tasks[s_id];
+            if(!s1.has(s_id)){
+                
+                s1.add(s_id);
+                let s_task = task_graph.tasks[s_id];
+                let child_node = new SpanningTreeNode(s_id, choose_construction_option(s_task));
 
-            let child_node = new SpanningTreeNode(s_id, choose_construction_option(s_task));
+                f1(child_node, s_task);
 
-            f1(child_node, s_task);
-
-            parent_node.children.push(child_node);
+                parent_node.children.push(child_node);
+            }
         }
     }
 
     let root_task = task_graph.tasks[0];
     let root = new SpanningTreeNode(0, choose_construction_option(root_task));
 
+    s1.add(0);
     f1(root, root_task);
 
     return root;
