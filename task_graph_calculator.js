@@ -245,36 +245,11 @@ class TaskGraphApp{
         form_table.innerHTML = inner_html2;
     }
 
-    renderSystemDescription(system_in){
-        let cost_results = calculateCost(system_in, this.task_graph);
-        let time_results = calculateTime(system_in, this.task_graph);
-
-        let inner_html = "";
-
-        for(let e of system_in){
-            inner_html += `<p> ${e.processor.name}: ${e.tasks.join(",")} </p>`;
-        }
-        inner_html += `
-        <br/>
-        <p>Cost of programmable processors: ${cost_results.cost_of_processors}</p>
-        <p>Cost of execution: ${cost_results.cost_of_execution}</p>
-        <p>Cost of channels: ${cost_results.cost_of_channels}</p>
-        <p>Total cost: ${cost_results.total_cost}</p>
-        <p>Total time: ${time_results.total_time} </p>
-        <br/>
-        `;
-
-        for(let dr of time_results.detailed_results){
-            inner_html += `<p>${dr.task_name}: ${dr.start_time} _ ${dr.end_time} # ${dr.proc_name}</p>`
-        }
-        return inner_html;
-    }
-
     prepareS4SystemDescription(show_cost_gains_form=false){
 
 
         let system_description = this.s_divs[4].querySelector("div[role='system_description']");
-        system_description.innerHTML = this.renderSystemDescription(this.embedded_system);
+        system_description.innerHTML = renderSystemDescription(this.task_graph, this.embedded_system);
 
         if(show_cost_gains_form){
             this.cost_gains_div.style.display=null;
@@ -286,7 +261,7 @@ class TaskGraphApp{
 
     prepareS5SystemDescription(){
         let system_description = this.s_divs[5].querySelector("div[role='system_description']");
-        system_description.innerHTML = this.renderSystemDescription(this.embedded_system2);
+        system_description.innerHTML = renderSystemDescription(this.task_graph, this.embedded_system2);
     }
 
     goNext(){

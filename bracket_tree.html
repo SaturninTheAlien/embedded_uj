@@ -3,12 +3,13 @@
     <head>
         <title>Bracket notation</title>
         <script src="bracket_tree.js"></script>
+        <script src="bracket_tree_app.js"></script>
         <script src="task_graph.js"></script>
     </head>
 
     <body>
         <h1>Bracket notation</h1>
-        <form id="form1">
+        <form id="task_graph_form">
             <textarea style="width: 500px; height: 300px;" name="tg_source">
 @tasks 10
 T0 2 1(0) 2(0) # This is a comment
@@ -56,25 +57,11 @@ CHAN0 15 7 1 1 1 1
             <button type="submit">Get bracket notation</button>
         </form>
 
-        <script>
-            let form1 = document.getElementById("form1");
-            form1.onsubmit = function(event){
-                event.preventDefault();
-                let fd = new FormData(form1);
-                let tg_source = fd.get("tg_source");
+        <div style="display: none;" id="solution_div">
+        </div>
 
-                try{
-                    let task_graph = readTaskGraph(tg_source);
-                    let bracket_tree = createRandomSpanningTree(task_graph);
-                    
-                    console.log(bracket_tree);
-                    console.log(bracket_tree.toString());
-                    alert(`Bracket notation: ${bracket_tree.toString()}`);
-                }
-                catch(e){
-                    alert(e);
-                }
-            }
+        <script>
+            let bracket_tree_app = new BracketTreeApp();
         </script>
 
     </body>

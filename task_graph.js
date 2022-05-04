@@ -592,6 +592,73 @@ function calculateCost(embedded_system, task_graph){
 }
 
 
+function renderSystemDescription(task_graph, system_in, show_detailed_time_results=true){
+    let cost_results = calculateCost(system_in, task_graph);
+    let time_results = calculateTime(system_in, task_graph);
+
+    let inner_html = "";
+
+    for(let e of system_in){
+        inner_html += `<p> ${e.processor.name}: ${e.tasks.join(",")} </p>`;
+    }
+    inner_html += `
+    <br/>
+    <p>Cost of programmable processors: ${cost_results.cost_of_processors}</p>
+    <p>Cost of execution: ${cost_results.cost_of_execution}</p>
+    <p>Cost of channels: ${cost_results.cost_of_channels}</p>
+    <p>Total cost: ${cost_results.total_cost}</p>
+    <p>Total time: ${time_results.total_time} </p>
+    <br/>
+    `;
+    if(show_detailed_time_results){
+        for(let dr of time_results.detailed_results){
+            inner_html += `<p>${dr.task_name}: ${dr.start_time} _ ${dr.end_time} # ${dr.proc_name}</p>`
+        }
+    }
+
+    return inner_html;
+}
+
+function renderSystemDescriptionFlex(task_graph, system_in, show_detailed_time_results=true){
+    let cost_results = calculateCost(system_in, task_graph);
+    let time_results = calculateTime(system_in, task_graph);
+
+    let inner_html = `<div style="display: flex;">
+    <div style="flex: 1;">
+    `;
+
+    for(let e of system_in){
+        inner_html += `<p> ${e.processor.name}: ${e.tasks.join(",")} </p>`;
+    }
+
+    inner_html += `
+    </div>
+    <div style="flex: 1;">
+
+    <br/>
+    <p>Cost of programmable processors: ${cost_results.cost_of_processors}</p>
+    <p>Cost of execution: ${cost_results.cost_of_execution}</p>
+    <p>Cost of channels: ${cost_results.cost_of_channels}</p>
+    <p>Total cost: ${cost_results.total_cost}</p>
+    <p>Total time: ${time_results.total_time} </p>
+    <br/>
+
+    </div>
+    `;
+    if(show_detailed_time_results){
+        inner_html+=`<div style="flex: 1;">`;
+       
+        for(let dr of time_results.detailed_results){
+            inner_html += `<p>${dr.task_name}: ${dr.start_time} _ ${dr.end_time} # ${dr.proc_name}</p>`
+        }
+
+        inner_html += "</div>";
+    }
+
+    inner_html += "</div>";
+    return inner_html;
+}
+
 
 if(typeof window === 'undefined'){
     
@@ -601,5 +668,7 @@ if(typeof window === 'undefined'){
         findTheCheapestSolution,
         calculateCost,
         calculateTime,
+        renderSystemDescription,
+        renderSystemDescriptionFlex
     }
 }
