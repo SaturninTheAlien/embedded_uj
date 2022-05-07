@@ -249,7 +249,7 @@ class TaskGraphApp{
 
 
         let system_description = this.s_divs[4].querySelector("div[role='system_description']");
-        system_description.innerHTML = renderSystemDescription(this.task_graph, this.embedded_system);
+        system_description.innerHTML = renderSystemDescriptionWithStatistics(this.task_graph, this.embedded_system);
 
         if(show_cost_gains_form){
             this.cost_gains_div.style.display=null;
@@ -261,7 +261,7 @@ class TaskGraphApp{
 
     prepareS5SystemDescription(){
         let system_description = this.s_divs[5].querySelector("div[role='system_description']");
-        system_description.innerHTML = renderSystemDescription(this.task_graph, this.embedded_system2);
+        system_description.innerHTML = renderSystemDescriptionWithStatistics(this.task_graph, this.embedded_system2);
     }
 
     goNext(){

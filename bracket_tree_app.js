@@ -26,28 +26,43 @@ class BracketTreeApp{
         }
     }
 
+    renderSystemDescriptionFromTree(spanning_tree){
+
+        let system = createEmbeddedSystemFromSpanningTree(this.task_graph, spanning_tree);
+
+        let inner_html = `
+        <div style="display: flex;">
+            <div style="flex: 1;">
+                <p> Tree: ${spanning_tree.constructionOptionsBracketNotation()} </p>
+                ${renderSystemDescription(system)}
+            </div>
+
+            <div style="flex: 1;">
+                ${renderSystemStatistics(this.task_graph, system, false)}
+            </div>
+        </div>
+        `
+
+        return inner_html;
+    }
+
 
     main(){
 
-        let _this = this;
-
-
-        let tree1 = createRandomSpanningTree(this.task_graph);
-        let tree2 = createRandomSpanningTree(this.task_graph);
-
-
-        let system1 = createEmbeddedSystemFromSpanningTree(this.task_graph, tree1);
-        let system2 = createEmbeddedSystemFromSpanningTree(this.task_graph, tree2);
+        this.tree1 = createRandomSpanningTree(this.task_graph);
+        this.tree2 = createRandomSpanningTree(this.task_graph);
 
         let inner_html = `
-        <p> Tree1: ${tree1.constructionOptionsBracketNotation()} </p>
-        <div>System1:
-        ${renderSystemDescriptionFlex(this.task_graph, system1, false)}
+        <div>
+        <p class="fd"> System1 </p>
+            ${this.renderSystemDescriptionFromTree(this.tree1)}
+
         </div>
 
-        <p> Tree2: ${tree2.constructionOptionsBracketNotation()} </p>
-        <div>System2:
-        ${renderSystemDescriptionFlex(this.task_graph, system2, false)}
+        <div>
+        <p class="fd"> System2 </p>
+            ${this.renderSystemDescriptionFromTree(this.tree2)}
+            
         </div>
         `
 
