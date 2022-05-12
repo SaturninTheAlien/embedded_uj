@@ -23,7 +23,9 @@ function oneOfEachProgrammableProcessorType(task_graph){
 
 function assignUnexpectedTasks(task_graph, embedded_system){
 
-    function used_the_fastest(task){    
+    //let chosen_element = null;
+
+    function f1(task){    
         let chosen_element = null;
         let chosen_time = Number.MAX_VALUE;
 
@@ -37,13 +39,17 @@ function assignUnexpectedTasks(task_graph, embedded_system){
                 }
             }
         }
-        if(chosen_element!=null){
-            chosen_element.tasks.push(task.name);
-        }
+        return chosen_element;
     }
 
+    let ce = null;
     for(let task of task_graph.tasks){
-        used_the_fastest(task);
+        if(ce==null || Math.random() < 0.5){
+            ce = f1(task);
+        }
+        if(ce!=null){
+            ce.tasks.push(task.name);
+        }
     }
 }
 

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Conditional task graph</title>
+        <script src="conditional_task_graph.js"></script>
+    </head>
+    <body>
+        <h1>Conditional task graph</h1>
+        <form id="task_graph_form">
+            <textarea style="width: 500px; height: 300px;" name="tg_source" required>
+@tasks 10
+T0 3 1(9) 3(74) 9(173) 
+T1 3 5(104) 7(115) C8(129)[true] 
+T2 0 
+T3 1 5(70) 
+T4 1 C8(117)[false] 
+T5 1 C8(155)[false] 
+T6 1 C8(189)[false]
+T7 2 C8(143)[false] 9(70) 
+T8 1 9(12) 
+T9 0 
+@proc 5
+0 0 0
+0 0 0
+62 0 1
+145 0 1
+63 0 1
+@times
+30 3 263 990 899 
+37 36 560 864 935 
+42 44 171 256 347 
+6 46 246 593 998 
+34 31 477 245 419 
+36 34 699 240 478 
+17 17 134 346 939 
+1 36 115 502 490 
+29 14 836 628 111 
+27 36 974 694 498 
+@cost
+586 691 67 45 99 
+676 599 45 29 37 
+710 657 51 26 30 
+731 796 38 86 53 
+635 639 57 19 25 
+760 820 99 77 28 
+944 641 13 83 95 
+669 838 70 98 50 
+958 616 13 88 40 
+865 861 93 18 91 
+@comm 2
+CHAN0 72 1 1 1 1 1 1 
+CHAN1 77 2 0 0 1 0 0 
+            </textarea>
+            <br/>
+            <button type="submit">Calculate</button>
+        </form>
+    </body>
+
+    <div style="display: none;" id="solution_div">
+    </div>
+
+    <script>
+
+        let solution_div = document.getElementById("solution_div");
+
+        let task_graph_form = document.getElementById("task_graph_form");
+        task_graph_form.onsubmit = function(event){
+            event.preventDefault();
+            let fd = new FormData(task_graph_form);
+
+            let c0 = Number.parseInt( fd.get("c0") );
+            let t0 = Number.parseInt( fd.get("t0") );
+
+            let tg_source = fd.get("tg_source");
+
+            try{
+                let c_task_graph = readConditionalTaskGraph(tg_source);
+
+                let conditions = getConditions(c_task_graph);
+
+                let inner_html = `<p> Number of conditions: ${conditions.length} </p><br/>
+                <p>Conditional edges: </p>
+                <ol>
+
+                `;
+                for(let c of conditions){
+                    inner_html += `<li> ${c} </li>`;
+                }
+
+                inner_html += "</ol>";
+
+                solution_div.innerHTML = inner_html;
+
+                /*let p2 = document.createElement("p");
+                p2.innerText = c_task_graph.toString();
+                solution_div.appendChild(p2);*/
+
+                solution_div.style.display = null;
+            }
+            catch(e){
+                console.log(e);
+                alert(e);
+            }
+            
+        }
+
+    </script>
+
+</html>
