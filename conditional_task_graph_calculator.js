@@ -84,7 +84,7 @@ class TaskGraphApp{
             event.preventDefault();
             try{
                 let conditional_tg = readConditionalTaskGraph(s0_text_area.value);
-                _this.task_graph = convertToNormalTaskGraph(conditional_tg);
+                _this.task_graph = convertConditionalToNormalTaskGraph(conditional_tg);
 
                 _this.goNext();
             }
