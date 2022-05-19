@@ -6,7 +6,6 @@ function readTextFile(callback_on_success){
     input.type = 'file';
 
     input.onchange = function(event){
-        console.log("wania");
         if(input.files.length==1){
             let file = input.files[0];
             let reader = new FileReader();

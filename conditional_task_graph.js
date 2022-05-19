@@ -8,11 +8,11 @@ function conditionalTaskGraphToString(task_graph)
         result+=task.name+" "+task.successors.length;
         for(let successor of task.successors)
         {
-            if(successor.condition==null){
-                result+=` ${successor.id}(${successor.data})`;
+            if(successor.hasOwnProperty("condition") && successor.condition!=null){
+                result+=` C${successor.id}(${successor.data})[${successor.condition}]`;
             }
             else{
-                result+=` C${successor.id}(${successor.data})[${successor.condition}]`;
+                result+=` ${successor.id}(${successor.data})`;
             }
         }
         result+="\n";
@@ -413,10 +413,46 @@ function getConditions(task_graph){
     return tmp;
 }
 
+function executeCondition(condition){
+    if(condition=="true" || condition=="True")return true;
+    return false;
+}
+
+function convertConditionalToNormalTaskGraph(task_graph_conditional, executeConditionFunc = executeCondition){
+    function convertTask(task){
+        let costs_per_processor = task.costs_per_processor;
+        let times_per_processor = task.times_per_processor;
+        let name = task.name;
+        let successors = task.successors.filter(s => {
+            if(s.hasOwnProperty("condition") && s.condition!=null ){
+                return executeConditionFunc(s.condition);
+            }
+            return true;
+        }).map(s => {
+            return {
+                "id": s.id,
+                "data": s.data
+            }});
+
+        return {name, successors, times_per_processor, costs_per_processor};
+    }
+
+    return {
+        "tasks": task_graph_conditional.tasks.map(convertTask),
+        "processors": task_graph_conditional.processors,
+        "channels": task_graph_conditional.channels,
+        toString(){
+            return conditionalTaskGraphToString(this);
+        }
+    };
+}
+
 
 if(typeof window === 'undefined'){
     module.exports = {
         readConditionalTaskGraph,
-        getConditions
+        getConditions,
+        executeCondition,
+        convertConditionalToNormalTaskGraph
     }   
 }

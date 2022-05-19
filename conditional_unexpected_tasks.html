@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Unexpected tasks</title>
+        
+        <script src="task_graph.js"></script>
+        <script src="conditional_task_graph.js"></script>
+        <script src="unexpected_tasks_solution.js"></script>
+
+        <style>
+            .fd{
+                font-weight: bold;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <h1>Unexpected tasks Min(t*c)</h1>
+        <form id="task_graph_form">
+
+            <label for="t0_input">T0</label>
+            <input type="number" name="t0" id="t0_input" min="0" required/>
+            <br/>
+
+            <label for="c0_input">C0</label>
+            <input type="number" name="c0" id="c0_input" min="0" required/>
+            <br/>
+            <select name="mode">
+                <option value="0">The fastest solution</option>
+                <option value="1">The cheapest solution</option>
+                <option value="2">Min time*cost</option>
+            </select>
+
+            <br/>
+            <br/>
+
+            <textarea style="width: 500px; height: 300px;" name="tg_source" required>
+@tasks 10
+T0 3 1(9) 3(74) 9(173) 
+T1 3 5(104) 7(115) C8(129)[true] 
+T2 0 
+T3 1 5(70) 
+T4 1 C8(117)[false] 
+T5 1 C8(155)[false] 
+T6 1 C8(189)[false]
+T7 2 C8(143)[false] 9(70) 
+T8 1 9(12) 
+T9 0 
+@proc 5
+0 0 0
+0 0 0
+62 0 1
+145 0 1
+63 0 1
+@times
+30 3 263 990 899 
+37 36 560 864 935 
+42 44 171 256 347 
+6 46 246 593 998 
+34 31 477 245 419 
+36 34 699 240 478 
+17 17 134 346 939 
+1 36 115 502 490 
+29 14 836 628 111 
+27 36 974 694 498 
+@cost
+586 691 67 45 99 
+676 599 45 29 37 
+710 657 51 26 30 
+731 796 38 86 53 
+635 639 57 19 25 
+760 820 99 77 28 
+944 641 13 83 95 
+669 838 70 98 50 
+958 616 13 88 40 
+865 861 93 18 91 
+@comm 2
+CHAN0 72 1 1 1 1 1 1 
+CHAN1 77 2 0 0 1 0 0 
+                
+            </textarea>
+            <br/>
+            <button type="submit">Calculate</button>
+        </form>
+
+        <div style="display: none;" id="solution_div">
+        </div>
+
+        <script>
+
+            let solution_div = document.getElementById("solution_div");
+
+            let task_graph_form = document.getElementById("task_graph_form");
+            task_graph_form.onsubmit = function(event){
+                event.preventDefault();
+                let fd = new FormData(task_graph_form);
+
+                let c0 = Number.parseInt( fd.get("c0") );
+                let t0 = Number.parseInt( fd.get("t0") );
+                let selected_mode = Number.parseInt(fd.get("mode"));
+
+                let tg_source = fd.get("tg_source");
+                let task_graph = null;
+
+                try{
+                    task_graph_c = readConditionalTaskGraph(tg_source);
+                    task_graph = convertConditionalToNormalTaskGraph(task_graph_c);
+                }
+                catch(e){
+                    alert(e);
+                }
+
+                if(task_graph!=null){
+                    solution_div.innerHTML = unexpectedTasksSolution(task_graph, c0, t0, selected_mode);
+                }
+                else{
+                    solution_div.innerHTML = `<p style="color:red;">Incorrect task graph</p>`;
+                }
+
+                solution_div.style.display = null;
+            }
+
+        </script>
+
+    </body>
+</html>

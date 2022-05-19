@@ -21,20 +21,52 @@ function oneOfEachProgrammableProcessorType(task_graph){
     return result;
 }
 
-function assignUnexpectedTasks(task_graph, embedded_system){
+function assignUnexpectedTasks(task_graph, embedded_system, selected_mode=0){
 
     //let chosen_element = null;
 
-    function f1(task){    
+    let calculateCost = null;
+    switch(selected_mode){
+        /**
+         * Minimal cost 
+         * */
+        case 0:{
+            
+            calculateCost = function(task, proc_type_id){
+                return task.costs_per_processor[proc_type_id];
+            }
+        }
+        break;
+        /**
+         * Minimal time 
+         * */
+        case 1:{
+            calculateCost = function(task, proc_type_id){
+                return task.times_per_processor[proc_type_id];
+            }
+        }
+        break;
+        /** 
+         * Minimal time*cost 
+         * */
+        case 2:{
+            calculateCost = function(task, proc_type_id){
+                return task.costs_per_processor[proc_type_id] * task.times_per_processor[proc_type_id];
+            }
+        }
+        break;
+    }
+
+    function f2(task){    
         let chosen_element = null;
-        let chosen_time = Number.MAX_VALUE;
+        let chosen_cost = Number.MAX_VALUE;
 
         for(let e of embedded_system){
             if(!e.processor.hardware_core){
-                let new_time = task.times_per_processor[e.processor.type_id] * task.costs_per_processor[e.processor.type_id];
-                if(new_time<chosen_time){
+                let new_cost =  calculateCost(task, e.processor.type_id);
+                if(new_cost<chosen_cost){
 
-                    chosen_time = new_time;
+                    chosen_cost = new_cost;
                     chosen_element = e;
                 }
             }
@@ -44,19 +76,15 @@ function assignUnexpectedTasks(task_graph, embedded_system){
 
     let ce = null;
     for(let task of task_graph.tasks){
-        if(ce==null || Math.random() < 0.5){
-            ce = f1(task);
-        }
-        if(ce!=null){
-            ce.tasks.push(task.name);
-        }
+        ce = f2(task);
+        ce.tasks.push(task.name);
     }
 }
 
 
-function unexpectedTasksSolution(task_graph, c0, t0){
+function unexpectedTasksSolution(task_graph, c0, t0, selected_mode){
     let embedded_system = oneOfEachProgrammableProcessorType(task_graph);
-    assignUnexpectedTasks(task_graph, embedded_system);
+    assignUnexpectedTasks(task_graph, embedded_system, selected_mode);
 
     let unexpected_cost = calculateCostOfExecution(embedded_system, task_graph);
     let unexpected_time = calculateTime(embedded_system, task_graph).total_time;
@@ -76,4 +104,12 @@ function unexpectedTasksSolution(task_graph, c0, t0){
     `;
 
     return inner_html;
+}
+
+if(typeof window === 'undefined'){
+    module.exports = {
+        oneOfEachProgrammableProcessorType,
+        assignUnexpectedTasks,
+        unexpectedTasksSolution
+    }   
 }
