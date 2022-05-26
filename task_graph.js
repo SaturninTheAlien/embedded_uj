@@ -651,6 +651,7 @@ function renderSystemDescriptionWithStatistics(task_graph, system_in, show_detai
 if(typeof window === 'undefined'){
     
     module.exports = {
+        taskGraphToString,
         readTaskGraph,
         findTheFastestSolution,
         findTheCheapestSolution,
