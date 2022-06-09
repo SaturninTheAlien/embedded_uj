@@ -99,7 +99,8 @@ function randomUnexceptedTaskFromGraph20(){
         "name": `U${unexpected_tasks_counter}`,
         "successors":[],
         "costs_per_processor":new_costs,
-        "times_per_processor":new_times
+        "times_per_processor":new_times,
+        "parents":[t1.name, t2.name, t3.name]
     }
     ++unexpected_tasks_counter;
     return new_task;

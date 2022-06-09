@@ -610,7 +610,7 @@ function calculateCost(embedded_system, task_graph){
 function renderSystemDescription(system_in){
     let inner_html = "";
     for(let e of system_in){
-        inner_html += `<p> ${e.processor.name}: ${e.tasks.join(",")} </p>`;
+        inner_html += `${e.processor.name}: ${e.tasks.join(",")} </br>`;
     }
     return inner_html;
 }

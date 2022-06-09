@@ -6,7 +6,7 @@
         <title>Exercise 23</title>
 
         <script src="task_graph.js"></script>
-        <script src="ex23.js"></script>
+        <script src="ex33.js"></script>
     </head>
     <body>
         <h1>Exercise 23</h1>
@@ -61,10 +61,28 @@ CHAN0 15 7 1 1 1 1
 
         <textarea style="width: 500px; height: 300px;" id="result_ta" disabled></textarea>
 
+        <p id="ex32"></p>
+
         <script>
             let task_graph_form = document.getElementById("task_graph_form");
             let result_ta = document.getElementById("result_ta");
+
+            let ex32_p = document.getElementById("ex32");
+
+            let inner_html = "";
             
+            for(let i=0;i<20;++i){
+                let task = randomUnexceptedTaskFromGraph20();
+                inner_html += `${task.name} -> ${task.parents.join(",")} <br/>
+                costs: ${task.costs_per_processor.join(" ")} <br/>
+                times: ${task.times_per_processor.join(" ")} <br/>
+                <br/>
+                `;
+            }
+
+            ex32_p.innerHTML = inner_html;
+
+
             task_graph_form.onsubmit = function(event){
                 event.preventDefault();
                 let fd = new FormData(event.target);

@@ -9,12 +9,14 @@
     <script src="task_graph_calculator.js"></script>
     <script src="utils.js"></script>
     <script src="cost_gains.js"></script>
+    <script src="gantt.js"></script>
     <style>
 .fd{
     font-weight: bold;
 }
 
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 </head>
 <body>
@@ -92,12 +94,12 @@
         </div>
 
         <!-- <div>
-            <p>Gantt chart</p>
-            <canvas role="gantt_chart" width=600 height=400 style="border: 1px solid black;"></canvas>
+            <div role="gantt_chart" style="height: 100%;"></div>
         </div> -->
     </div>
 
     <button type="button" role="go_back">Back</button>
+    <div role="gantt_chart" style="height: 100%;"></div>
 </div>
 
 <div id="s5" style="display: none;">
@@ -107,15 +109,14 @@
 
         <div style="flex: 1;">
             <div role="system_description"></div>
-
         </div>
 
         <!-- <div>
-            <p>Gantt chart</p>
-            <canvas role="gantt_chart" width=600 height=400 style="border: 1px solid black;"></canvas>
+            <div role="gantt_chart" style="height: 100%;"></div>
         </div> -->
     </div>
     <button type="button" role="go_back">Back</button>
+    <div role="gantt_chart" style="height: 100%;"></div>
 </div>
 
 <script>
